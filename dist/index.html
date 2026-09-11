@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1218" />
+    <meta name="description" content="부산 에코델타시티 101동 기준층을 도면 기반으로 확인하는 웹 3D 공간 뷰어" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b1218'/%3E%3Cpath d='M14 46V20l18-8 18 8v26H38V31H26v15H14Z' fill='none' stroke='%2347c2ae' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <title>101동 기준층 · Web 3D Home Planner</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three.module.min.js",
+          "three/addons/": "./vendor/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div>
+            <strong>101동 공간 검토</strong>
+            <span>부산 에코델타시티 공동31블럭</span>
+          </div>
+        </div>
+        <div class="drawing-meta" aria-label="도면 정보">
+          <span class="status-dot"></span>
+          <span>CAD 연동</span>
+          <b>A-305</b>
+        </div>
+        <button class="icon-button" id="resetView" type="button" aria-label="카메라 초기화" title="카메라 초기화">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11a8 8 0 1 1 2.34 5.66M4 16v-5h5"/></svg>
+        </button>
+      </header>
+
+      <main class="workspace">
+        <section class="viewport-panel" aria-label="101동 기준층 3D 뷰어">
+          <div class="viewport-heading">
+            <div>
+              <p class="eyebrow">101동 · 3~9층</p>
+              <h1>기준층 평면</h1>
+            </div>
+            <div class="view-tabs" role="group" aria-label="보기 방식">
+              <button class="view-tab active" data-view="3d" type="button">3D</button>
+              <button class="view-tab" data-view="plan" type="button">평면</button>
+            </div>
+          </div>
+
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="scene" aria-label="마우스로 회전하고 확대할 수 있는 101동 기준층 3D 모델"></canvas>
+            <div class="model-loading" id="modelLoading">
+              <span></span>
+              <p>CAD 형상 불러오는 중</p>
+            </div>
+            <div class="orientation" aria-hidden="true">
+              <span class="north">N</span>
+              <i></i>
+            </div>
+            <div class="viewport-help">
+              <span><i class="mouse-icon"></i>드래그 회전</span>
+              <span>휠 확대</span>
+              <span>가구 선택 후 이동</span>
+            </div>
+            <div class="scale-chip">실측 단위 · m</div>
+          </div>
+
+          <div class="model-strip">
+            <div class="model-stat">
+              <span>도면</span>
+              <strong>A-305</strong>
+            </div>
+            <div class="model-stat">
+              <span>벽체 높이</span>
+              <strong>2.70 m <small>가정값</small></strong>
+            </div>
+            <div class="model-stat">
+              <span>추출 형상</span>
+              <strong id="segmentCount">—</strong>
+            </div>
+            <div class="quality-note">
+              <span>1차 형상 검증</span>
+              <p>단면도와 창호도로 높이·개구부를 추가 보정합니다.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="control-panel" aria-label="모델 및 가구 설정">
+          <section class="panel-section floor-section">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">101동 기준층</p>
+                <h2>세대 타입 선택</h2>
+              </div>
+              <select id="floorSelect" aria-label="층 선택">
+                <option>3층</option>
+                <option>4층</option>
+                <option selected>5층</option>
+                <option>6층</option>
+                <option>7층</option>
+                <option>8층</option>
+                <option>9층</option>
+              </select>
+            </div>
+            <p class="unit-source">A-305와 단위세대평면도 A-201~220 대조</p>
+            <div class="zone-buttons type-buttons" role="group" aria-label="세대 타입 선택">
+              <button class="zone-button active" data-zone="all" type="button"><span>동 전체</span><small>기준층 배치</small></button>
+              <button class="zone-button" data-zone="119c" type="button"><span>119C</span><small>판상형</small></button>
+              <button class="zone-button" data-zone="110a" type="button"><span>110A</span><small>타워형</small></button>
+              <button class="zone-button" data-zone="110b" type="button"><span>110B</span><small>타워형</small></button>
+              <button class="zone-button" data-zone="110c" type="button"><span>110C</span><small>타워형</small></button>
+              <button class="zone-button" data-zone="110d" type="button"><span>110D</span><small>타워형</small></button>
+            </div>
+            <div class="selected-unit"><span>현재 보기</span><strong id="selectedUnit">동 전체 기준층</strong></div>
+          </section>
+
+          <section class="panel-section layers-section">
+            <div class="section-heading compact">
+              <h2>표시 요소</h2>
+              <button class="text-button" id="showAll" type="button">모두 표시</button>
+            </div>
+            <label class="layer-row"><span><i class="legend structure"></i>구조벽</span><input type="checkbox" data-layer="structure" checked /></label>
+            <label class="layer-row"><span><i class="legend partition"></i>경량벽</span><input type="checkbox" data-layer="partition" checked /></label>
+            <label class="layer-row"><span><i class="legend window"></i>창호</span><input type="checkbox" data-layer="window" checked /></label>
+            <label class="layer-row"><span><i class="legend door"></i>문 위치</span><input type="checkbox" data-layer="door" checked /></label>
+          </section>
+
+          <section class="panel-section furniture-section">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">공간 꾸미기</p>
+                <h2>가구 놓기</h2>
+              </div>
+              <span class="count-badge"><b id="furnitureCount">0</b>개</span>
+            </div>
+            <p class="section-copy">가구를 누르면 화면 중심에 실제 크기로 배치됩니다.</p>
+            <div class="furniture-grid">
+              <button data-furniture="sofa" type="button"><span class="furniture-icon sofa"></span><b>3인 소파</b><small>2.10 × 0.90 m</small></button>
+              <button data-furniture="bed" type="button"><span class="furniture-icon bed"></span><b>퀸 침대</b><small>1.60 × 2.00 m</small></button>
+              <button data-furniture="table" type="button"><span class="furniture-icon table"></span><b>6인 식탁</b><small>1.80 × 0.85 m</small></button>
+              <button data-furniture="fridge" type="button"><span class="furniture-icon fridge"></span><b>냉장고</b><small>0.91 × 0.73 m</small></button>
+            </div>
+            <div class="furniture-actions">
+              <button id="rotateFurniture" type="button" disabled>90° 회전</button>
+              <button id="deleteFurniture" type="button" disabled>선택 삭제</button>
+              <button id="clearFurniture" class="danger" type="button" disabled>전체 비우기</button>
+            </div>
+          </section>
+        </aside>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
