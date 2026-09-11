@@ -109,7 +109,7 @@ h2 { margin-bottom: 0; font-size: 1rem; letter-spacing: -.025em; }
 .section-heading select { color: #d6e3e2; background: #111e25; border: 1px solid var(--line-strong); border-radius: 9px; padding: 8px 28px 8px 10px; font-size: .78rem; }
 .zone-buttons { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-top: 16px; }
 .unit-source { color: var(--muted); font-size: .66rem; margin: 11px 0 -7px; }
-.type-buttons { grid-template-columns: repeat(3, 1fr); }
+.type-buttons { grid-template-columns: repeat(2, 1fr); }
 .selected-unit { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: rgba(71,194,174,.035); }
 .selected-unit span { color: var(--muted); font-size: .65rem; }
 .selected-unit strong { color: var(--accent-bright); font-size: .72rem; }

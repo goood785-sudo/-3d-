@@ -133,20 +133,16 @@ async function loadModel() {
 const views = {
   all: { position: [36, 42, 43], target: [-4, 0, 1] },
   "119c": { position: [-18, 15, 16], target: [-29, 0, -1] },
-  "110a": { position: [24, 15, 18], target: [13, 0, 3] },
   "110b": { position: [31, 17, 22], target: [20, 0, 8] },
-  "110c": { position: [31, 17, 10], target: [20, 0, -4] },
-  "110d": { position: [21, 16, 17], target: [11, 0, 1] },
+  "110c": { position: [-4, 17, 22], target: [-16, 0, 5] },
   plan: { position: [-4, 66, 1], target: [-4, 0, 1] }
 };
 
 const unitViews = {
   all: { label: "동 전체 기준층", bounds: null },
   "119c": { label: "119C · 판상형", bounds: [-33, -25.4, -7.4, 4.7] },
-  "110a": { label: "110A · 타워형", bounds: [8, 18.8, -1.8, 7.2] },
   "110b": { label: "110B · 타워형", bounds: [16.5, 25.8, 1.5, 14.2] },
-  "110c": { label: "110C · 타워형", bounds: [15.5, 25.8, -8.8, 1.1] },
-  "110d": { label: "110D · 타워형", bounds: [7, 17.2, -5.2, 6.6] }
+  "110c": { label: "110C · 판상형", bounds: [-22, -11, -1, 11] }
 };
 
 function tweenCamera(position, target, immediate = false) {
